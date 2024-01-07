@@ -9,33 +9,73 @@ class authController extends GetxController {
 
   void Login(String email, String password) async {
     try {
-      await auth.signInWithEmailAndPassword(
+      UserCredential myUser = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      Get.offAllNamed(Routes.HOME);
+      if (myUser.user!.emailVerified) {
+        Get.offAllNamed(Routes.HOME);
+      } else {
+        Get.defaultDialog(
+            title: "Verifikasi Email!", middleText: "Lakukan Verifikasi Email");
+      }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+        Get.defaultDialog(
+          title: "Terjadi Kesalahn!",
+          middleText: "No user found for that email",
+        );
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+        Get.defaultDialog(
+          title: "Terjadi Kesalahn!",
+          middleText: "Wrong password provided for that user.",
+        );
       }
     } catch (e) {
       print(e);
+      Get.defaultDialog(
+        title: "Terjadi Kesalahn!",
+        middleText: "Email Anda belum terdaftar.",
+      );
     }
   }
 
   void Signup(String email, String password) async {
     try {
-      await FirebaseAuth.instance
+      UserCredential myUser = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      Get.offAllNamed(Routes.HOME);
+      await myUser.user!.sendEmailVerification();
+      Get.defaultDialog(
+        title: "Verifikasi Email!",
+        middleText: "Kami telah mengirim link verifikasi pada $email",
+        onConfirm: () {
+          Get.back();
+          Get.back();
+        },
+        textConfirm: "Ya, Saya akan verifikasi",
+      );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+        Get.defaultDialog(
+          title: "Terjadi Kesalahan!",
+          middleText: "The password provided is too weak.",
+        );
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+        Get.defaultDialog(
+          title: "Terjadi Kesalahn!",
+          middleText: "The account already exists for that email.",
+        );
       }
+    } catch (e) {
+      print(e);
+      Get.defaultDialog(
+        title: "Terjadi Kesalahn!",
+        middleText: "Email Anda tidak terdeteksi.",
+      );
     }
   }
 
