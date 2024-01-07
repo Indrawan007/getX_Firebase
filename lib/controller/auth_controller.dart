@@ -7,6 +7,34 @@ class authController extends GetxController {
 
   Stream<User?> get streamAuth => auth.authStateChanges();
 
+  void Reset(String email) async {
+    if (email != "" && GetUtils.isEmail(email)) {
+      try {
+        await auth.sendPasswordResetEmail(email: email);
+        Get.defaultDialog(
+          title: "Berhasil!",
+          middleText: "Kami telah mengirim reset password pada $email",
+          onConfirm: () {
+            Get.back();
+            Get.back();
+          },
+          textConfirm: "Ya, Saya mengerti.",
+        );
+      } catch (e) {
+        print(e);
+        Get.defaultDialog(
+          title: "Terjadi Kesalahn!",
+          middleText: "Tidak dapat reset password.",
+        );
+      }
+    } else {
+      Get.defaultDialog(
+        title: "Terjadi Kesalahn!",
+        middleText: "Wrong password provided for that user.",
+      );
+    }
+  }
+
   void Login(String email, String password) async {
     try {
       UserCredential myUser = await auth.signInWithEmailAndPassword(
