@@ -11,10 +11,8 @@ class AddProductController extends GetxController {
     CollectionReference products = firestore.collection("Product");
 
     try {
-      await products.add({
-        "name": name,
-        "price": price,
-      });
+      String date = DateTime.now().toIso8601String();
+      await products.add({"name": name, "price": price, "date": date});
 
       Get.defaultDialog(
           title: "Berhasil",

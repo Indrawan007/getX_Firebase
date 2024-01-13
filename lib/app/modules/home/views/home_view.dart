@@ -58,7 +58,11 @@ class HomeView extends GetView<HomeController> {
                   title: Text(
                       "${(allData[index].data() as Map<String, dynamic>)["name"]}"),
                   subtitle: Text(
-                      "${(allData[index].data() as Map<String, dynamic>)["price"]}"),
+                      "Rp ${(allData[index].data() as Map<String, dynamic>)["price"]}"),
+                  trailing: IconButton(
+                    onPressed: () => controller.delete(allData[index].id),
+                    icon: Icon(Icons.delete),
+                  ),
                 );
               },
             );
