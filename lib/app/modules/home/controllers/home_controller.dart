@@ -11,7 +11,8 @@ class HomeController extends GetxController {
 
   Stream<QuerySnapshot<Object?>> streamData() {
     CollectionReference products = firestore.collection("Product");
-    return products.snapshots();
+    return products.orderBy("date", descending: true).snapshots();
+    // return products.where("price", isGreaterThanOrEqualTo: 1000).snapshots();
   }
 
   void delete(String docID) async {
