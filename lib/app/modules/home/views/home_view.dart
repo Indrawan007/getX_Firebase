@@ -10,19 +10,22 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('HomeView'),
-        centerTitle: true,
-        actions: [
-          IconButton(onPressed: () => authC.Logout(), icon: Icon(Icons.logout))
-        ],
-      ),
-      body: const Center(
-        child: Text(
-          'HomeView is working',
-          style: TextStyle(fontSize: 20),
+        appBar: AppBar(
+          title: const Text('HomeView'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () => authC.Logout(), icon: Icon(Icons.logout))
+          ],
         ),
-      ),
-    );
+        body: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text("Nama Product"),
+              subtitle: Text("Harga"),
+            );
+          },
+        ));
   }
 }
