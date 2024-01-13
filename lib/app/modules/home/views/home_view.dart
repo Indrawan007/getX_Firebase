@@ -20,10 +20,32 @@ class HomeView extends GetView<HomeController> {
           IconButton(onPressed: () => authC.Logout(), icon: Icon(Icons.logout))
         ],
       ),
-      body: FutureBuilder<QuerySnapshot<Object?>>(
-        future: controller.getData(),
+      // body: FutureBuilder<QuerySnapshot<Object?>>(
+      //   future: controller.getData(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.done) {
+      //       var allData = snapshot.data!.docs;
+      //       return ListView.builder(
+      //         itemCount: allData.length,
+      //         itemBuilder: (context, index) {
+      //           return ListTile(
+      //             title: Text(
+      //                 "${(allData[index].data() as Map<String, dynamic>)["name"]}"),
+      //             subtitle: Text(
+      //                 "${(allData[index].data() as Map<String, dynamic>)["price"]}"),
+      //           );
+      //         },
+      //       );
+      //     }
+      //     return const Center(
+      //       child: CircularProgressIndicator(),
+      //     );
+      //   },
+      // ),
+      body: StreamBuilder<QuerySnapshot<Object?>>(
+        stream: controller.streamData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.active) {
             var allData = snapshot.data!.docs;
             return ListView.builder(
               itemCount: allData.length,

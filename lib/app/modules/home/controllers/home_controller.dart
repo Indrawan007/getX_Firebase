@@ -8,4 +8,9 @@ class HomeController extends GetxController {
     CollectionReference products = firestore.collection("Product");
     return products.get();
   }
+
+  Stream<QuerySnapshot<Object?>> streamData() {
+    CollectionReference products = firestore.collection("Product");
+    return products.snapshots();
+  }
 }
